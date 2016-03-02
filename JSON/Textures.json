@@ -1,0 +1,9 @@
+{
+    "spriteName": {
+        "spriteSheet":"textures.png",
+        "x":10,
+        "y":10,
+        "w":10,
+        "h":10
+        }
+}
