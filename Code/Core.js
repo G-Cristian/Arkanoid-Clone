@@ -7,3 +7,11 @@ Function.prototype.method = function (name, func) {
 Number.method('integer', function () {
     return this < 0.0 ? Math.ceil(this) : Math.floor(this);
 });
+
+Object.method('superior', function (methodName) {
+    var that = this;
+    var method = that[methodName];
+    return function () {
+        return method.apply(that, arguments);
+    };
+});
