@@ -1,5 +1,5 @@
-//gSpriteEngine
-var gSpriteEngine =
+//gSpriteManager
+var gSpriteManager =
     {
         //dictionary of sprite sheets. Key: sprite sheet name. Value: sprite sheet image.
         spriteSheets: {},
@@ -11,14 +11,20 @@ var gSpriteEngine =
             this.sprites = {};
         },
 
-        //loads a sprite sheet. It mustn't be called outside gSpriteEngine.
+        //loads a sprite sheet. It mustn't be called outside gSpriteManager.
         //if a sprite sheet is needed the method getSpriteSheet must be called.
-        __loadSpriteSheetInternal: function (imgSrc) {
+        __loadSpriteSheetInternal: function (imgSrc, onload, onerror) {
             var img = null;
             if (!this.spriteSheets[imgSrc]) {
                 img = new Image();
+                img.onload = function () {
+                    gSpriteManager.spriteSheets[imgSrc] = img;
+                    onload(img);
+                };
+                img.onerror = function () {
+                    onerror();
+                };
                 img.src = imgSrc;
-                this.spriteSheets[imgSrc] = img;
             }
             else {
                 console.log("Image '" + imgSrc + "' is already loaded.");
@@ -28,13 +34,20 @@ var gSpriteEngine =
         },
 
         //returns a sprite sheet image. If the sprite sheet doesn't exist it is loaded.
-        getSpriteSheet: function (imgSrc) {
+        getSpriteSheet: function (imgSrc, onload, onerror) {
             var img = this.spriteSheets[imgSrc];
             if (!img) {
-                img = this.__loadSpriteSheetInternal(imgSrc);
-                if (!img) {
+                this.__loadSpriteSheetInternal(imgSrc, function (image) {
+                    img = image;
+                    console.log("Image '" + imgSrc + "' loaded.");
+                    onload(img);
+                }, function () {
                     console.log("Image '" + imgSrc + "' couldn't be loaded.");
-                }
+                    onerror();
+                });
+            }
+            else {
+                onload(img);
             }
 
             return img;
@@ -53,30 +66,39 @@ var gSpriteEngine =
         loadSprites: function (spriteJSON) {
             var parsed = JSON.parse(spriteJSON);
             for (var key in parsed) {
-                var srpite = parsed[key];
-                var spriteSheet = this.getSpriteSheet(sprite.spriteSheet);
-                if (spriteSheet) {
-                    var spt = {
-                        name: key,
-                        img: spriteSheet,
-                        x: sprite.x,
-                        y: sprite.y,
-                        w: sprite.w,
-                        h: sprite.h,
-                        cx: -sprite.w * 0.5,
-                        cy: -sprite.h * 0.5,
-                    };
+                var func = function (spriteName) {
+                    console.log("sprite = " + spriteName);
+                    var sprite = parsed[spriteName];
+                    gSpriteManager.getSpriteSheet(sprite.spriteSheet, function (image) {
+                        var spriteSheet = image;
+                        if (spriteSheet) {
+                            var spt = {
+                                name: spriteName,
+                                img: spriteSheet,
+                                x: sprite.x,
+                                y: sprite.y,
+                                w: sprite.w,
+                                h: sprite.h,
+                                cx: -sprite.w * 0.5,
+                                cy: -sprite.h * 0.5,
+                            };
 
-                    if (!this.sprites[key]) {
-                        this.sprites[key] = spt;
-                    }
-                    else {
-                        console.log("Sprite '" + key + "' already exists.");
-                    }
-                }
+                            if (!gSpriteManager.sprites[spriteName]) {
+                                gSpriteManager.sprites[spriteName] = spt;
+                            }
+                            else {
+                                console.log("Sprite '" + spriteName + "' already exists.");
+                            }
+                        } else {
+                            console.log("Spritesheet '" + sprite.spriteSheet + "' not loaded yet.");
+                        }
+                    }, function () {
+                        console.log("Spritesheet '" + sprite.spriteSheet + "' not loaded.");
+                    });
+                }(key);
             }
         },
-        drawsprite: function (sprite, posX, posY) {
+        drawSprite: function (sprite, posX, posY) {
             var img = null;
             var spt = null;
             if (typeof (sprite) == 'object') {
@@ -101,6 +123,6 @@ var gSpriteEngine =
                 y: spt.cy
             };
 
-            gGameEngine.ctx.draw(img, spt.x, spt.y, spt.w, spt.h, posX+hlf.x, posY+hlf.y, spt.w, spt.h);
+            gGameEngine.ctx.drawImage(img, spt.x, spt.y, spt.w, spt.h, posX + hlf.x, posY + hlf.y, spt.w, spt.h);
         }
     };

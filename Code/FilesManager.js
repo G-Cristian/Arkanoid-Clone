@@ -3,13 +3,18 @@ var gTypesOfFileToLoad = {
         var fileref = document.createElement('script');
         fileref.setAttribute("type", "text/javascript");
         fileref.addEventListener('onload', function (e) {
+            console.log("script loaded.");
             callback();
         }, false);
         fileref.setAttribute("src", script);
         document.getElementsByTagName('head')[0].appendChild(fileref);
     },
     "sprites": function (sprite, callback) {
-        callback();
+        gFilesManager.readFile(sprite, function (responceText) {
+            gFilesManager.spritesJSONs.push(responceText);
+            console.log(gFilesManager.spritesJSONs[gFilesManager.spritesJSONs.length-1] + ' pushed.');
+            callback();
+        })
     },
     "sounds": function (sounds, callback) {
         callback();
@@ -19,6 +24,12 @@ var gTypesOfFileToLoad = {
 //gFileManager
 var gFilesManager =
     {
+        spritesJSONs: [],
+        soundsJSONs:[],
+        init: function () {
+            this.spritesJSONs = [];
+            this.soundsJSONs = [];
+        },
         readFile:function(fileName, callback, responceType){
             var xhr = new XMLHttpRequest();
             xhr.open("GET", fileName, true);
@@ -44,13 +55,14 @@ var gFilesManager =
                 var loadBatch = {
                     total:0,
                     count:0,
-                    callback:callback
+                    cb:callback
                 };
 
                 for (var elem in parsed)
                     loadBatch.total++;
 
-                for (var e in parsed) {
+                for (var e in parsed){
+                    console.log('Loading ' + parsed[e] + ', type '+ e);
                     gFilesManager.loadAssets(parsed[e], e, function () {
                         gFilesManager.onLoadedCallback(e, loadBatch);
                     });
@@ -59,15 +71,18 @@ var gFilesManager =
         },
         loadAssets:function(assetList, typeOfData, callback){
             var batch = {
-                total: scripts.length,
+                total: assetList.length,
                 count: 0,
                 cb: callback
             };
 
             for (var i = 0; i < assetList.length; i++) {
-                gTypesOfFileToLoad[typeOfData](assetList[i], function(){
-                    gFilesManager.onLoadedCallback(assetList[i], batch);
-                });
+                console.log('Loading ' + assetList[i]);
+                var func =function (j) {
+                    gTypesOfFileToLoad[typeOfData](assetList[i], function () {
+                        gFilesManager.onLoadedCallback(assetList[j], batch);
+                    });
+                }(i);
             }
                 
             
@@ -78,7 +93,8 @@ var gFilesManager =
         {
             batch.count++;
             console.log("Asset '" + asset + "' loaded.");
+            console.log("batch.count = " + batch.count + ", batch.total = "+batch.total);
             if (batch.count >= batch.total)
-                batch.callback();
+                batch.cb();
         }
     };
