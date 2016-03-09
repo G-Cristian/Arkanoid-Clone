@@ -3,6 +3,15 @@
 var gGameEngine =
     {
         ctx: null,
+        currLevel:null,
+        factory: {},
+        entities: [],
+        _deferredKill:[],
+        spawnEntity:function(type,spec){
+            var entity = factory[type](spec);
+            this.entities.push(entity);
+            return entity;
+        },
         setup: function () {
             var body = document.getElementById("body");
             var canvas = document.createElement("canvas");
@@ -42,15 +51,40 @@ var gGameEngine =
                     gSpriteManager.loadSprites(gFilesManager.spritesJSONs[i]);
                     console.log(gFilesManager.spritesJSONs[i]);
                 }
+                var level = gFilesManager.levelsJSONs[0].json;
+                gGameEngine.currLevel = gFilesManager.loadLevel(level);
                 gGameEngine.start();
             });
             
         },
         start: function () {
+          
             setTimeout(function () {
-                gSpriteManager.drawSprite('greenblock_2', 20, 20);
-                gSpriteManager.drawSprite('greenblock_3', 20, 20);
+                for (var i = 0; i < gGameEngine.entities.length; i++) {
+                    var entity = gGameEngine.entities[i];
+                    entity.draw();
+                }
             }, 1500);
             
+        },
+        update: function () {
+            var i = 0;
+            var ent;
+            for (i = 0; i < this.entities.length; i++) {
+                ent = this.entities[i];
+                if (!ent.killed) {
+                    ent.update();
+                }
+                else {
+                    this._deferredKill.push(ent);
+                }
+            }
+
+            for (i = 0; i < this._deferredKill.length; i++) {
+                ent = this._deferredKill[i];
+                this.entities.erase(ent);
+            }
+
+            this._deferredKill = [];
         }
     };

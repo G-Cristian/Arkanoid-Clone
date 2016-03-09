@@ -1,0 +1,22 @@
+{
+    "name":"test_01",
+    "blocks": [{
+                   "type": "redBlock",
+                   "pos": {
+                       "x": 20,
+                       "y": 20
+                   },
+                   "type": "redBlock",
+                   "pos": {
+                       "x": 38,
+                       "y": 20
+                   },
+                   "type": "redBlock",
+                   "pos": {
+                       "x": 20,
+                       "y": 28
+                   }
+               }],
+    "previousLevel": null,
+    "nextLevel": null
+}

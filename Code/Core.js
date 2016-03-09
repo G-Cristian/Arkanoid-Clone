@@ -15,3 +15,13 @@ Object.method('superior', function (methodName) {
         return method.apply(that, arguments);
     };
 });
+
+Array.method('erase', function (item) {
+    var i = 0;
+    for (i = this.length-1; i >= 0; i--) {
+        if (this[i] === item)
+            this.splice(i, 1);
+    }
+
+    return this;
+});

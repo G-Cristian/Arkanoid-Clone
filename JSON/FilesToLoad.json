@@ -1,3 +1,4 @@
 {
-    "sprites": ["http://localhost/arkanoid-clone/JSON/Textures.json"]
+    "sprites": ["http://localhost/arkanoid-clone/JSON/Textures.json"],
+    "levels": ["http://localhost/arkanoid-clone/JSON/Test_01.json"]
 }
