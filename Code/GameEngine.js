@@ -1,4 +1,4 @@
-
+///<reference path="LevelManager.js"/>
 //gGameEngine
 var gGameEngine =
     {
@@ -7,10 +7,13 @@ var gGameEngine =
         factory: {},
         entities: [],
         _deferredKill:[],
-        spawnEntity:function(type,spec){
-            var entity = factory[type](spec);
+        spawnEntity: function (type, spec) {
+            console.log("spawn type " + type + " spec " + spec);
+            var entity = this.factory[type](spec);
             this.entities.push(entity);
+            console.log("entity " + entity);
             return entity;
+
         },
         setup: function () {
             var body = document.getElementById("body");
@@ -52,7 +55,8 @@ var gGameEngine =
                     console.log(gFilesManager.spritesJSONs[i]);
                 }
                 var level = gFilesManager.levelsJSONs[0].json;
-                gGameEngine.currLevel = gFilesManager.loadLevel(level);
+                console.log("level " + level);
+                gGameEngine.currLevel = gLevelManager.loadLevel(level);
                 gGameEngine.start();
             });
             

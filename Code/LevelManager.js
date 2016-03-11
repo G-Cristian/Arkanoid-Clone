@@ -46,7 +46,7 @@ var gLevelManager = {
             nextLevel: null,
             destroyableBlocksCount: 0,
         };
-        levelSpec.name = parced.name;
+        levelSpec.name = parsed.name;
         levelSpec.previousLevel = parsed.previousLevel || null;
         levelSpec.nextLevel = parsed.nextLevel || null;
         blocks = parsed.blocks;

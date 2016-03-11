@@ -68,15 +68,25 @@ var gFilesManager =
                     count:0,
                     cb:callback
                 };
+                console.log("filename = " + fileName);
+                console.log("responseText = " + responseText);
+                console.log("parsed = " + parsed);
+                for (var elem in parsed) {
+                    if (parsed.hasOwnProperty(elem)) {
+                        loadBatch.total++;
+                        console.log("elem = " + elem);
+                    }
+                }
 
-                for (var elem in parsed)
-                    loadBatch.total++;
-
-                for (var e in parsed){
-                    console.log('Loading ' + parsed[e] + ', type '+ e);
-                    gFilesManager.loadAssets(parsed[e], e, function () {
-                        gFilesManager.onLoadedCallback(e, loadBatch);
-                    });
+                for (var e in parsed) {
+                    if (parsed.hasOwnProperty(e)) {
+                        var foo = function (element) {
+                            console.log('Loading ' + parsed[element] + ', type ' + e);
+                            gFilesManager.loadAssets(parsed[element], element, function () {
+                                gFilesManager.onLoadedCallback(element, loadBatch);
+                            });
+                        }(e);
+                    }
                 }
             });
         },

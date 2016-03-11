@@ -66,36 +66,38 @@ var gSpriteManager =
         loadSprites: function (spriteJSON) {
             var parsed = JSON.parse(spriteJSON);
             for (var key in parsed) {
-                var func = function (spriteName) {
-                    console.log("sprite = " + spriteName);
-                    var sprite = parsed[spriteName];
-                    gSpriteManager.getSpriteSheet(sprite.spriteSheet, function (image) {
-                        var spriteSheet = image;
-                        if (spriteSheet) {
-                            var spt = {
-                                name: spriteName,
-                                img: spriteSheet,
-                                x: sprite.x,
-                                y: sprite.y,
-                                w: sprite.w,
-                                h: sprite.h,
-                                cx: -sprite.w * 0.5,
-                                cy: -sprite.h * 0.5,
-                            };
+                if (parsed.hasOwnProperty(key)) {
+                    var func = function (spriteName) {
+                        console.log("sprite = " + spriteName);
+                        var sprite = parsed[spriteName];
+                        gSpriteManager.getSpriteSheet(sprite.spriteSheet, function (image) {
+                            var spriteSheet = image;
+                            if (spriteSheet) {
+                                var spt = {
+                                    name: spriteName,
+                                    img: spriteSheet,
+                                    x: sprite.x,
+                                    y: sprite.y,
+                                    w: sprite.w,
+                                    h: sprite.h,
+                                    cx: -sprite.w * 0.5,
+                                    cy: -sprite.h * 0.5,
+                                };
 
-                            if (!gSpriteManager.sprites[spriteName]) {
-                                gSpriteManager.sprites[spriteName] = spt;
+                                if (!gSpriteManager.sprites[spriteName]) {
+                                    gSpriteManager.sprites[spriteName] = spt;
+                                }
+                                else {
+                                    console.log("Sprite '" + spriteName + "' already exists.");
+                                }
+                            } else {
+                                console.log("Spritesheet '" + sprite.spriteSheet + "' not loaded yet.");
                             }
-                            else {
-                                console.log("Sprite '" + spriteName + "' already exists.");
-                            }
-                        } else {
-                            console.log("Spritesheet '" + sprite.spriteSheet + "' not loaded yet.");
-                        }
-                    }, function () {
-                        console.log("Spritesheet '" + sprite.spriteSheet + "' not loaded.");
-                    });
-                }(key);
+                        }, function () {
+                            console.log("Spritesheet '" + sprite.spriteSheet + "' not loaded.");
+                        });
+                    }(key);
+                }
             }
         },
         drawSprite: function (sprite, posX, posY) {
