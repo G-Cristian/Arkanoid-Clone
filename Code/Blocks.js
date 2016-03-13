@@ -1,7 +1,11 @@
+///<reference path = PhysicsEngine.js />
 //Base Block
 var createBlock = function (spec, my) {
     var that;
+    var entityDef = null;
     my = my || {};
+
+    my.physBody = null;
 
     that = createEntity(spec, my);
 
@@ -11,15 +15,43 @@ var createBlock = function (spec, my) {
 
     my.currSprite = null;
 
-    if (spec)
+    if (spec) {
         my.currSprite = spec.sprite || null;
+
+        entityDef = {
+            x: spec.pos.x,
+            y: spec.pos.y,
+            halfWidth: spec.size.x * 0.5,
+            halfHeight: spec.size.y * 0.5,
+            userData: {
+                ent:that
+            }
+        };
+
+        my.physBody = gPhysicsEngine.addBody(entityDef);
+    }
 
     that.init = function (args) {
         superInit(args);
         if (args) {
+            var entityDef = {
+                x: args.pos.x,
+                y: args.pos.y,
+                halfWidth: args.size.x * 0.5,
+                halfHeight: args.size.y * 0.5,
+                userData: {
+                    ent: that
+                }
+            };
+            
+            my.physBody = gPhysicsEngine.addBody(entityDef);
             //TODO replace for animation instead of sprite
            // my.currSprite = args.sprite || null;
         }
+    };
+
+    that.onTouch = function (otherBody, point, impulse) {
+
     };
 
     that.update = function () {
