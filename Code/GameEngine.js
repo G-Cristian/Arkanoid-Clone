@@ -4,6 +4,7 @@
 //gGameEngine
 var gGameEngine =
     {
+        commonLevelConfig:null,
         ctx: null,
         currLevel:null,
         factory: {},
@@ -16,6 +17,16 @@ var gGameEngine =
             console.log("entity " + entity);
             return entity;
 
+        },
+        removeEntity: function (ent) {
+            var physBody = null;
+            this.entities.erase(ent);
+            if (ent.getPhysBody) {
+                physBody = ent.getPhysBody();
+                if (physBody) {
+                    gPhysicsEngine.removeBody(physBody);
+                }
+            }
         },
         setup: function () {
             var body = document.getElementById("body");
@@ -57,6 +68,8 @@ var gGameEngine =
                     console.log(gFilesManager.spritesJSONs[i]);
                 }
                 gPhysicsEngine.create();
+                //debug
+                gPhysicsEngine.setDebug();
                 gPhysicsEngine.addContactListener({
                     PostSolve: function (bodyA, bodyB, impulse) {
                         var uA = bodyA ? bodyA.GetUserData() : null;
@@ -73,6 +86,7 @@ var gGameEngine =
                     }
                 });
 
+                gGameEngine.commonLevelConfig = JSON.parse(gFilesManager.levelsConfigJSON);
                 var level = gFilesManager.levelsJSONs[0].json;
                 console.log("level " + level);
                 gGameEngine.currLevel = gLevelManager.loadLevel(level);
@@ -81,21 +95,30 @@ var gGameEngine =
             
         },
         start: function () {
-          
-            setTimeout(function () {
-                for (var i = 0; i < gGameEngine.entities.length; i++) {
-                    var entity = gGameEngine.entities[i];
-                    entity.draw();
-                }
-            }, 1500);
+            gGameEngine.setBallInitialLocation();
+
+            setInterval(function () {
+                gGameEngine.gameLoop();
+            }, 33);
             
+        },
+        gameLoop:function(){
+            gGameEngine.update();
+            gGameEngine.draw();
+        },
+        setBallInitialLocation:function(){
+            var common = JSON.parse(gFilesManager.levelsConfigJSON);
+            var entitySpec = {};
+            entitySpec.pos = common.ball.pos;
+            entitySpec.radius = common.ball.radius;
+            gGameEngine.spawnEntity(ball.type, entitySpec);
         },
         update: function () {
             var i = 0;
             var ent;
             for (i = 0; i < this.entities.length; i++) {
                 ent = this.entities[i];
-                if (!ent.killed) {
+                if (!ent.killed()) {
                     ent.update();
                 }
                 else {
@@ -105,11 +128,20 @@ var gGameEngine =
 
             for (i = 0; i < this._deferredKill.length; i++) {
                 ent = this._deferredKill[i];
-                this.entities.erase(ent);
+                gGameEngine.removeEntity(ent);
             }
 
             this._deferredKill = [];
 
             gPhysicsEngine.update();
+        },
+        draw: function () {
+            var ent = null;
+            for (var i = 0; i < this.entities.length; i++) {
+                ent = this.entities[i];
+                if (!ent.killed()) {
+                    ent.draw();
+                }
+            }
         }
     };

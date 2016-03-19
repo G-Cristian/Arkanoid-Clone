@@ -1,14 +1,22 @@
 ///<reference path=Box2d.min.js />
+///<reference path=GameEngine.js />
 
 //gPhysicsEngine
 var gPhysicsEngine =
     {
+        dbgDraw:null,
         world: null,
         create: function () {
             
             this.world = new Box2D.Dynamics.b2World(
                 new Box2D.Common.Math.b2Vec2(0, 0),
                 false);
+        },
+        setDebug:function(){
+            gPhysicsEngine.dbgDraw = new Box2D.Dynamics.b2DebugDraw();
+            gPhysicsEngine.dbgDraw.SetSprite(gGameEngine.ctx);
+            gPhysicsEngine.dbgDraw.m_drawFlags = Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit;
+            gPhysicsEngine.world.SetDebugDraw(gPhysicsEngine.dbgDraw);
         },
         addContactListener: function (callbacks) {
             var listener = new Box2D.Dynamics.b2ContactListener();
@@ -38,6 +46,7 @@ var gPhysicsEngine =
             }
             bodyDef.position.x = entityDef.x;
             bodyDef.position.y = entityDef.y;
+            bodyDef.angle = entityDef.angle * Box2D.Common.b2Settings.b2_pi / 180;
 
             if (entityDef.userData) {
                 bodyDef.userDate = entityDef.userData;
@@ -53,7 +62,7 @@ var gPhysicsEngine =
             }
 
             if (entityDef.shape == 'circle') {
-                fixtureDefinition.shape = new Box2D.Collision.Shapes.b2CircleShape(entityDef.radious);
+                fixtureDefinition.shape = new Box2D.Collision.Shapes.b2CircleShape(entityDef.radius);
             }
             else {
                 fixtureDefinition.shape = new Box2D.Collision.Shapes.b2PolygonShape();
@@ -76,5 +85,9 @@ var gPhysicsEngine =
             gPhysicsEngine.world.ClearForces();
 
             return Date.now() - start;
+        },
+        drawDebug: function () {
+            if (gPhysicsEngine.dbgDraw)
+                gPhysicsEngine.world.DrawDebugData();
         }
     };

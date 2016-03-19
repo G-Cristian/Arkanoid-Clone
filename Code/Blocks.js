@@ -23,6 +23,7 @@ var createBlock = function (spec, my) {
             y: spec.pos.y,
             halfWidth: spec.size.x * 0.5,
             halfHeight: spec.size.y * 0.5,
+            type:'static',
             userData: {
                 ent:that
             }
@@ -39,6 +40,7 @@ var createBlock = function (spec, my) {
                 y: args.pos.y,
                 halfWidth: args.size.x * 0.5,
                 halfHeight: args.size.y * 0.5,
+                type: 'static',
                 userData: {
                     ent: that
                 }
@@ -46,7 +48,7 @@ var createBlock = function (spec, my) {
             
             my.physBody = gPhysicsEngine.addBody(entityDef);
             //TODO replace for animation instead of sprite
-           // my.currSprite = args.sprite || null;
+           // my.currSprite = args.sprite || my.currSprite;
         }
     };
 
@@ -88,4 +90,50 @@ var createRedBlock = function (spec, my) {
     return that;
 };
 
+//greenBlock
+var createGreenBlock = function (spec, my) {
+    var that;
+    my = my || {};
+    spec = spec || {};
+
+    spec.sprite = 'greenblock_1';
+    that = createBlock(spec, my);
+
+    var superInit = that.superior('init');
+    var superUpdate = that.superior('update');
+    var superKill = that.superior('kill');
+
+    that.init = function (args) {
+        args = args || {};
+        args.sprite = args.sprite || 'greenblock_1';
+        superInit(args);
+    };
+
+    return that;
+};
+
+//blueBlock
+var createBlueBlock = function (spec, my) {
+    var that;
+    my = my || {};
+    spec = spec || {};
+
+    spec.sprite = 'blueblock_1';
+    that = createBlock(spec, my);
+
+    var superInit = that.superior('init');
+    var superUpdate = that.superior('update');
+    var superKill = that.superior('kill');
+
+    that.init = function (args) {
+        args = args || {};
+        args.sprite = args.sprite || 'blueblock_1';
+        superInit(args);
+    };
+
+    return that;
+};
+
 gGameEngine.factory["redBlock"] = createRedBlock;
+gGameEngine.factory["greenBlock"] = createGreenBlock;
+gGameEngine.factory["blueBlock"] = createBlueBlock;

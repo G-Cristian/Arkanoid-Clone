@@ -54,5 +54,19 @@
         "y":8,
         "w":12,
         "h":6
-        }
+        },
+    "ball": {
+        "spriteSheet":"http://localhost/arkanoid-clone/Img/textures.png",
+        "x":1,
+        "y":24,
+        "w":6,
+        "h":6
+    },
+    "wall": {
+        "spriteSheet":"http://localhost/arkanoid-clone/Img/textures.png",
+        "x":1,
+        "y":58,
+        "w":100,
+        "h":4
+    }
 }

@@ -59,7 +59,7 @@ var createEntity = function (spec, my) {
             my.pos = args.pos || my.pos;
             my.size = args.size || my.size;
             my.last = args.last || my.last;
-            my.currSprite = args.sprite || null;
+            my.currSprite = args.sprite || my.currSprite;
         }
     };
 

@@ -1,3 +1,5 @@
+///<reference path="FilesManager.js"/>
+
 //createLevel
 var createLevel = function (spec) {
     var name = "",
@@ -34,7 +36,10 @@ var createLevel = function (spec) {
 };
 var gLevelManager = {
     loadLevel: function (levelJSON) {
+        var common = JSON.parse(gFilesManager.levelsConfigJSON);
         var parsed = JSON.parse(levelJSON);
+        var borders = null;
+        var border = null;
         var blocks = null;
         var block = null;
         var i = 0;
@@ -49,6 +54,16 @@ var gLevelManager = {
         levelSpec.name = parsed.name;
         levelSpec.previousLevel = parsed.previousLevel || null;
         levelSpec.nextLevel = parsed.nextLevel || null;
+
+        borders = common.borders;
+        for (i = 0; i < walls.length; i++) {
+            border = borders[i];
+            entitySpec = {};
+            entitySpec.pos = border.pos;
+            entitySpec.rotation = border.rotation;
+            gGameEngine.spawnEntity(border.type, entitySpec);
+        }
+
         blocks = parsed.blocks;
         for (i = 0; i < blocks.length; i++) {
             block = blocks[i];
@@ -58,7 +73,7 @@ var gLevelManager = {
             if(block.isDestroyable)
                 levelSpec.destroyableBlocksCount++;
         }
-
+                
         level = createLevel(levelSpec);
     },
     loadNextLevel: function (currLevel, onload, onerror) {

@@ -9,14 +9,14 @@
       }
     },
     {
-      "type": "redBlock",
+      "type": "greenBlock",
       "pos": {
         "x": 38,
         "y": 20
       }
     },
     {
-      "type": "redBlock",
+      "type": "blueBlock",
       "pos": {
         "x": 20,
         "y": 28

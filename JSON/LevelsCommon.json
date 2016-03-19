@@ -1,0 +1,59 @@
+{
+    "borders": [{
+                  "type": "border",
+                  "pos": {
+                      "x": 0,
+                      "y": 0
+                  },
+                  "rotation": 0
+              },
+              {
+                  "type": "border",
+                  "pos": {
+                      "x": 0,
+                      "y": 204
+                  },
+                  "rotation": 0
+              },
+              {
+                  "type": "border",
+                  "pos": {
+                      "x": 0,
+                      "y": 4
+                  },
+                  "rotation": 90
+              },
+              {
+                  "type": "border",
+                  "pos": {
+                      "x": 0,
+                      "y": 104
+                  },
+                  "rotation": 90
+              },
+              {
+                  "type": "border",
+                  "pos": {
+                      "x": 100,
+                      "y": 4
+                  },
+                  "rotation": 90
+              },
+              {
+                  "type": "border",
+                  "pos": {
+                      "x": 100,
+                      "y": 104
+                  },
+                  "rotation": 90
+              }
+    ],
+    "ball": {
+        "type": "ball",
+        "pos": {
+            "x": 50,
+            "y": 190
+        },
+        "radius": 3
+    }
+}

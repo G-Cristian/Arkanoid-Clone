@@ -12,22 +12,29 @@ var gTypesOfFileToLoad = {
     "sprites": function (sprite, callback) {
         gFilesManager.readFile(sprite, function (responceText) {
             gFilesManager.spritesJSONs.push(responceText);
-            console.log(gFilesManager.spritesJSONs[gFilesManager.spritesJSONs.length-1] + ' pushed.');
+            console.log(gFilesManager.spritesJSONs[gFilesManager.spritesJSONs.length - 1] + ' pushed.');
             callback();
-        })
+        });
     },
     "sounds": function (sound, callback) {
         callback();
     },
+    "levelsCommon":function(common, callback){
+        gFilesManager.readFile(common, function (responceText) {
+            gFilesManager.levelsConfigJSON = responceText;
+            console.log("Levels Config (levelsCommon) : " + gFilesManager.levelsConfigJSON + " loaded.");
+            callback();
+        });
+    },
     "levels": function (level, callback) {
         gFilesManager.readFile(level, function (responceText) {
             gFilesManager.levelsJSONs.push({
-                path:level,
+                path: level,
                 json: responceText
             });
             console.log(gFilesManager.levelsJSONs[gFilesManager.levelsJSONs.length - 1] + ' pushed.');
             callback();
-        })
+        });
     }
 }
 
@@ -36,6 +43,7 @@ var gFilesManager =
     {
         spritesJSONs: [],
         soundsJSONs: [],
+        levelsConfigJSON:null,
         levelsJSONs: [],
         init: function () {
             this.spritesJSONs = [];
