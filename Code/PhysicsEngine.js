@@ -17,6 +17,8 @@ var gPhysicsEngine =
             gPhysicsEngine.dbgDraw.SetSprite(gGameEngine.ctx);
             gPhysicsEngine.dbgDraw.m_drawFlags = Box2D.Dynamics.b2DebugDraw.e_shapeBit | Box2D.Dynamics.b2DebugDraw.e_jointBit;
             gPhysicsEngine.world.SetDebugDraw(gPhysicsEngine.dbgDraw);
+
+            console.log("dbgDraw = " + gPhysicsEngine.dbgDraw);
         },
         addContactListener: function (callbacks) {
             var listener = new Box2D.Dynamics.b2ContactListener();
@@ -78,7 +80,7 @@ var gPhysicsEngine =
         update: function () {
             var start = Date.now();
             gPhysicsEngine.world.Step(
-                1/60,
+                1/30,
                 10,
                 10
                 );
@@ -87,7 +89,11 @@ var gPhysicsEngine =
             return Date.now() - start;
         },
         drawDebug: function () {
-            if (gPhysicsEngine.dbgDraw)
+            console.log("drawDebug");
+            console.log("dbgDraw = " + gPhysicsEngine.dbgDraw);
+            if (gPhysicsEngine.dbgDraw) {
                 gPhysicsEngine.world.DrawDebugData();
+                console.log("gPhysicsEngine.world.DrawDebugData();");
+            }
         }
     };

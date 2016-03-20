@@ -11,6 +11,7 @@ var createBlock = function (spec, my) {
 
     var superInit = that.superior('init');
     var superUpdate = that.superior('update');
+    var superDraw = that.superior('draw');
     var superKill = that.superior('kill');
 
     my.currSprite = null;
@@ -29,7 +30,7 @@ var createBlock = function (spec, my) {
             }
         };
 
-        my.physBody = gPhysicsEngine.addBody(entityDef);
+//        my.physBody = gPhysicsEngine.addBody(entityDef);
     }
 
     that.init = function (args) {
@@ -46,10 +47,15 @@ var createBlock = function (spec, my) {
                 }
             };
             
-            my.physBody = gPhysicsEngine.addBody(entityDef);
+//            my.physBody = gPhysicsEngine.addBody(entityDef);
             //TODO replace for animation instead of sprite
            // my.currSprite = args.sprite || my.currSprite;
         }
+    };
+
+    that.draw = function () {
+        console.log("draw block");
+        superDraw();
     };
 
     that.onTouch = function (otherBody, point, impulse) {

@@ -4,7 +4,9 @@
 //gGameEngine
 var gGameEngine =
     {
-        commonLevelConfig:null,
+        _debug:true,
+        commonLevelConfig: null,
+        canvas:null,
         ctx: null,
         currLevel:null,
         factory: {},
@@ -19,14 +21,14 @@ var gGameEngine =
 
         },
         removeEntity: function (ent) {
-            var physBody = null;
+//            var physBody = null;
             this.entities.erase(ent);
-            if (ent.getPhysBody) {
-                physBody = ent.getPhysBody();
-                if (physBody) {
-                    gPhysicsEngine.removeBody(physBody);
-                }
-            }
+//            if (ent.getPhysBody) {
+//                physBody = ent.getPhysBody();
+//                if (physBody) {
+//                    gPhysicsEngine.removeBody(physBody);
+//                }
+//            }
         },
         setup: function () {
             var body = document.getElementById("body");
@@ -43,6 +45,7 @@ var gGameEngine =
                 console.log("body.appendChild(canvas);");
                 gGameEngine.ctx = canvas.getContext('2d');
                 console.log("gGameEngine.ctx = canvas.getContext('2d');");
+                gGameEngine.canvas = canvas;
                 gGameEngine.loadFiles();
                 console.log("gGameEngine.loadFiles();");
             });
@@ -67,9 +70,12 @@ var gGameEngine =
                     gSpriteManager.loadSprites(gFilesManager.spritesJSONs[i]);
                     console.log(gFilesManager.spritesJSONs[i]);
                 }
-                gPhysicsEngine.create();
+ //               gPhysicsEngine.create();
+
                 //debug
-                gPhysicsEngine.setDebug();
+//                if (gGameEngine._debug)
+//                    gPhysicsEngine.setDebug();
+/*
                 gPhysicsEngine.addContactListener({
                     PostSolve: function (bodyA, bodyB, impulse) {
                         var uA = bodyA ? bodyA.GetUserData() : null;
@@ -85,7 +91,7 @@ var gGameEngine =
                         }
                     }
                 });
-
+*/
                 gGameEngine.commonLevelConfig = JSON.parse(gFilesManager.levelsConfigJSON);
                 var level = gFilesManager.levelsJSONs[0].json;
                 console.log("level " + level);
@@ -111,7 +117,7 @@ var gGameEngine =
             var entitySpec = {};
             entitySpec.pos = common.ball.pos;
             entitySpec.radius = common.ball.radius;
-            gGameEngine.spawnEntity(ball.type, entitySpec);
+            gGameEngine.spawnEntity(common.ball.type, entitySpec);
         },
         update: function () {
             var i = 0;
@@ -133,15 +139,23 @@ var gGameEngine =
 
             this._deferredKill = [];
 
-            gPhysicsEngine.update();
+ //           gPhysicsEngine.update();
         },
         draw: function () {
+            gGameEngine.ctx.clearRect(0, 0, gGameEngine.canvas.width, gGameEngine.canvas.height);
+
             var ent = null;
             for (var i = 0; i < this.entities.length; i++) {
                 ent = this.entities[i];
                 if (!ent.killed()) {
+                    //console.log("drawing " + ent + " in pos " + ent.getPos());
                     ent.draw();
                 }
             }
+
+ //           if (gGameEngine._debug) {
+ //               console.log("draw physics debug");
+               // gPhysicsEngine.drawDebug();
+ //           }
         }
     };

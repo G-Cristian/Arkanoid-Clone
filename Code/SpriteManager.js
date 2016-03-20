@@ -1,3 +1,5 @@
+///<reference path="GameEngine.js"/>
+
 //gSpriteManager
 var gSpriteManager =
     {
@@ -100,7 +102,7 @@ var gSpriteManager =
                 }
             }
         },
-        drawSprite: function (sprite, posX, posY) {
+        drawSprite: function (sprite, posX, posY, angle) {
             var img = null;
             var spt = null;
             if (typeof (sprite) == 'object') {
@@ -125,6 +127,30 @@ var gSpriteManager =
                 y: spt.cy
             };
 
-            gGameEngine.ctx.drawImage(img, spt.x, spt.y, spt.w, spt.h, posX + hlf.x, posY + hlf.y, spt.w, spt.h);
+            var worldSize = gGameEngine.commonLevelConfig["worldSize"];
+            
+            // 'worldSize' world units (wu) = 'canvasSize' cacnvas units (cu)
+            // '1' wu = 'canvasSize' / 'worldSize' cu
+
+            var worldCanvasRatio = {
+                x: gGameEngine.canvas.width / worldSize.x,
+                y: gGameEngine.canvas.height / worldSize.y,
+            };
+            console.log("worldCanvasRatio.x = " + worldCanvasRatio.x + " worldCanvasRatio.y = " + worldCanvasRatio.y);
+
+            if (angle && angle != 0) {
+                gGameEngine.ctx.save();
+                gGameEngine.ctx.translate(posX * worldCanvasRatio.x, posY * worldCanvasRatio.y);
+                gGameEngine.ctx.rotate(angle * Math.PI / 180);
+                gGameEngine.ctx.drawImage(  img, spt.x, spt.y, spt.w, spt.h,
+                                            hlf.x * worldCanvasRatio.x, hlf.y * worldCanvasRatio.y,
+                                            spt.w * worldCanvasRatio.x, spt.h * worldCanvasRatio.y);
+                gGameEngine.ctx.restore();
+            }
+            else {
+                gGameEngine.ctx.drawImage(  img, spt.x, spt.y, spt.w, spt.h,
+                                            (posX + hlf.x) * worldCanvasRatio.x, (posY + hlf.y) * worldCanvasRatio.y,
+                                            spt.w * worldCanvasRatio.x, spt.h * worldCanvasRatio.y);
+            }
         }
     };

@@ -16,6 +16,8 @@ var createEntity = function (spec, my) {
         y: 0
     };
 
+    my.angle = 0;
+
     my.killed = false;
 
     my.currSprite = null;
@@ -24,6 +26,7 @@ var createEntity = function (spec, my) {
         my.pos = spec.pos || my.pos;
         my.size = spec.size || my.size;
         my.last = spec.last || my.last;
+        my.angle = spec.angle || my.angle;
         my.currSprite = spec.sprite || null;
     }
 
@@ -50,6 +53,10 @@ var createEntity = function (spec, my) {
         };
     };
 
+    that.getAngle = function () {
+        return my.angle;
+    };
+
     that.killed = function () {
         return my.killed;
     };
@@ -59,6 +66,7 @@ var createEntity = function (spec, my) {
             my.pos = args.pos || my.pos;
             my.size = args.size || my.size;
             my.last = args.last || my.last;
+            my.angle = args.angle || my.angle;
             my.currSprite = args.sprite || my.currSprite;
         }
     };
@@ -67,7 +75,9 @@ var createEntity = function (spec, my) {
 
     that.draw = function () {
         if (my.currSprite) {
-            gSpriteManager.drawSprite(my.currSprite, my.pos.x, my.pos.y);
+            console.log("sprite = " + my.currSprite);
+            console.log("last.x = "+ my.last.x + " last.y = " + my.last.y + " pos.x = " + my.pos.x + " pos.y = " + my.pos.y);
+            gSpriteManager.drawSprite(my.currSprite, my.pos.x, my.pos.y, my.angle);
         }
     };
 

@@ -7,17 +7,21 @@ var createBorder = function (spec, my) {
 
     my.physBody = null;
 
+    side = null;
+
     that = createEntity(spec, my);
 
     var superInit = that.superior('init');
     var superUpdate = that.superior('update');
+    var superDraw = that.superior('draw');
     var superKill = that.superior('kill');
 
     my.currSprite = 'wall';
 
     if (spec) {
         my.currSprite = spec.sprite || my.currSprite;
-
+        my.angle = spec.rotation || my.angle;
+        side = spec.side || 'bottom';
         entityDef = {
             x: spec.pos.x,
             y: spec.pos.y,
@@ -26,11 +30,12 @@ var createBorder = function (spec, my) {
             halfHeight: spec.size.y * 0.5,
             type: 'static',
             userData: {
-                ent:that
+                ent: that,
+                type:'border'
             }
         };
 
-        my.physBody = gPhysicsEngine.addBody(entityDef);
+ //       my.physBody = gPhysicsEngine.addBody(entityDef);
     }
 
     that.init = function (args) {
@@ -49,8 +54,15 @@ var createBorder = function (spec, my) {
             };
 
             my.currSprite = args.sprite || my.currSprite;
-            my.physBody = gPhysicsEngine.addBody(entityDef);            
+            my.angle = args.rotation || my.angle;
+
+ //           my.physBody = gPhysicsEngine.addBody(entityDef);            
         }
+    };
+
+    that.draw = function () {
+        console.log("draw border");
+        superDraw();
     };
 
     that.onTouch = function (otherBody, point, impulse) {

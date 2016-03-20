@@ -56,10 +56,12 @@ var gLevelManager = {
         levelSpec.nextLevel = parsed.nextLevel || null;
 
         borders = common.borders;
-        for (i = 0; i < walls.length; i++) {
+        for (i = 0; i < borders.length; i++) {
             border = borders[i];
             entitySpec = {};
             entitySpec.pos = border.pos;
+            entitySpec.size = border.size;
+            entitySpec.side = border.side;
             entitySpec.rotation = border.rotation;
             gGameEngine.spawnEntity(border.type, entitySpec);
         }
@@ -69,6 +71,7 @@ var gLevelManager = {
             block = blocks[i];
             entitySpec = {};
             entitySpec.pos = block.pos;
+            entitySpec.size = block.size;
             gGameEngine.spawnEntity(block.type, entitySpec);
             if(block.isDestroyable)
                 levelSpec.destroyableBlocksCount++;
