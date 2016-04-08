@@ -61,7 +61,7 @@ var createBorder = function (spec, my) {
     };
 
     that.draw = function () {
-        console.log("draw border");
+       // console.log("draw border");
         superDraw();
     };
 

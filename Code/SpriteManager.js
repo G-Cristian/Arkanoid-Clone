@@ -136,7 +136,7 @@ var gSpriteManager =
                 x: gGameEngine.canvas.width / worldSize.x,
                 y: gGameEngine.canvas.height / worldSize.y,
             };
-            console.log("worldCanvasRatio.x = " + worldCanvasRatio.x + " worldCanvasRatio.y = " + worldCanvasRatio.y);
+           // console.log("worldCanvasRatio.x = " + worldCanvasRatio.x + " worldCanvasRatio.y = " + worldCanvasRatio.y);
 
             if (angle && angle != 0) {
                 gGameEngine.ctx.save();
@@ -152,5 +152,13 @@ var gSpriteManager =
                                             (posX + hlf.x) * worldCanvasRatio.x, (posY + hlf.y) * worldCanvasRatio.y,
                                             spt.w * worldCanvasRatio.x, spt.h * worldCanvasRatio.y);
             }
+        },
+        drawRect: function (rect) {
+            gGameEngine.ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+        },
+        drawCircle: function (circ) {
+            gGameEngine.ctx.beginPath();
+            gGameEngine.ctx.arc(circ.x, cir.y, circ.radius, 0, 2 * Math.PI);
+            gGameEngine.ctx.stroke();
         }
     };

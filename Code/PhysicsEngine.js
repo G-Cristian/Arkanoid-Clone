@@ -89,11 +89,11 @@ var gPhysicsEngine =
             return Date.now() - start;
         },
         drawDebug: function () {
-            console.log("drawDebug");
-            console.log("dbgDraw = " + gPhysicsEngine.dbgDraw);
+          //  console.log("drawDebug");
+          //  console.log("dbgDraw = " + gPhysicsEngine.dbgDraw);
             if (gPhysicsEngine.dbgDraw) {
                 gPhysicsEngine.world.DrawDebugData();
-                console.log("gPhysicsEngine.world.DrawDebugData();");
+         //       console.log("gPhysicsEngine.world.DrawDebugData();");
             }
         }
     };

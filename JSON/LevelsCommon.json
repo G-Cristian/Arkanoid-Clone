@@ -3,6 +3,12 @@
     "x": 320,
     "y": 240
   },
+  "levelSize": {
+    "left": 4,
+    "top": 4,
+    "right": 104,
+    "bottom":204
+  },
   "borders": [
     {
       "type": "border",

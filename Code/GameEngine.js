@@ -13,10 +13,10 @@ var gGameEngine =
         entities: [],
         _deferredKill:[],
         spawnEntity: function (type, spec) {
-            console.log("spawn type " + type + " spec " + spec);
+          //  console.log("spawn type " + type + " spec " + spec);
             var entity = this.factory[type](spec);
             this.entities.push(entity);
-            console.log("entity " + entity);
+         //   console.log("entity " + entity);
             return entity;
 
         },
