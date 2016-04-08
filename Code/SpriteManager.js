@@ -129,7 +129,7 @@ var gSpriteManager =
 
             var worldSize = gGameEngine.commonLevelConfig["worldSize"];
             
-            // 'worldSize' world units (wu) = 'canvasSize' cacnvas units (cu)
+            // 'worldSize' world units (wu) = 'canvasSize' canvas units (cu)
             // '1' wu = 'canvasSize' / 'worldSize' cu
 
             var worldCanvasRatio = {

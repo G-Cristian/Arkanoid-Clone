@@ -8,7 +8,7 @@ var createBall = function (spec, my) {
 
     my.physBody = null;
     
-    var speed = 3;
+    var speed = 2;
     var dir = {
         x:0.7071,
         y: 0.7071
@@ -211,8 +211,8 @@ var createBall = function (spec, my) {
                 ent = previousCollisionEntities[i];
 
                 rect = {
-                    x: ent.getPos().x,
-                    y: ent.getPos().y,
+                    x: ent.getPos().x - ent.getSize().x / 2,
+                    y: ent.getPos().y - ent.getSize().y / 2,
                     width: ent.getSize().x,
                     height: ent.getSize().y
                 };
@@ -251,8 +251,8 @@ var createBall = function (spec, my) {
             dir.x = dir.x / dirLength;
             dir.y = dir.y / dirLength;
 
-//            my.pos.x += dir.x * steps;
-//            my.pos.y += dir.y * steps;
+            my.pos.x += dir.x * steps;
+            my.pos.y += dir.y * steps;
         }
     };
 
@@ -263,8 +263,8 @@ var createBall = function (spec, my) {
             radius: ball.getRadius()
         };
         var rect = {
-            x: block.getPos().x,
-            y: block.getPos().y,
+            x: block.getPos().x - block.getSize().x / 2,
+            y: block.getPos().y - block.getSize().y / 2,
             width: block.getSize().x,
             height: block.getSize().y,
         };
