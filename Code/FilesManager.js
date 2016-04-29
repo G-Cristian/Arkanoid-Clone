@@ -26,6 +26,12 @@ var gTypesOfFileToLoad = {
             callback();
         });
     },
+    "inputs": function (inputs, callback) {
+        gFilesManager.readFile(inputs, function (responceText) {
+            gFilesManager.inputJSON = responceText;
+            callback();
+        });
+    },
     "levels": function (level, callback) {
         gFilesManager.readFile(level, function (responceText) {
             gFilesManager.levelsJSONs.push({
@@ -43,6 +49,7 @@ var gFilesManager =
     {
         spritesJSONs: [],
         soundsJSONs: [],
+        inputJSON: null,
         levelsConfigJSON:null,
         levelsJSONs: [],
         init: function () {

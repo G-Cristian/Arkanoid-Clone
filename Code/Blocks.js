@@ -7,7 +7,7 @@ var createBlock = function (spec, my) {
 
     my.physBody = null;
 
-    spec.type = spec.type || "Block";
+    spec.typeForCollision = spec.typeForCollision || "Block";
     that = createEntity(spec, my);
 
     var superInit = that.superior('init');
@@ -84,7 +84,7 @@ var createDestroyableBlock = function (spec, my) {
 
     my.physBody = null;
 
-    spec.type = spec.type || "DestroyableBlock";
+    spec.typeForCollision = spec.typeForCollision || "DestroyableBlock";
     that = createBlock(spec, my);
 
     var superInit = that.superior('init');

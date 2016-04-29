@@ -62,11 +62,18 @@
         "w":6,
         "h":6
     },
-    "wall": {
-        "spriteSheet":"http://localhost/arkanoid-clone/Img/textures.png",
-        "x":1,
-        "y":58,
-        "w":100,
-        "h":4
-    }
+  "wall": {
+    "spriteSheet": "http://localhost/arkanoid-clone/Img/textures.png",
+    "x": 1,
+    "y": 58,
+    "w": 100,
+    "h": 4
+  },
+  "player": {
+    "spriteSheet": "http://localhost/arkanoid-clone/Img/textures.png",
+    "x": 1,
+    "y": 58,
+    "w": 24,
+    "h": 4
+  }
 }

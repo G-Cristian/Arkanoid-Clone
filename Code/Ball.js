@@ -8,6 +8,8 @@ var createBall = function (spec, my) {
 
     my.physBody = null;
     
+    var glued = true;
+
     var speed = 2;
     var dir = {
         x:0.7071,
@@ -27,6 +29,8 @@ var createBall = function (spec, my) {
     if (spec) {
         my.currSprite = spec.sprite || my.currSprite;
         my.radius = spec.radius || my.radius;
+        glued = spec.glued || glued;
+
         entityDef = {
             x: spec.pos.x,
             y: spec.pos.y,
@@ -45,6 +49,15 @@ var createBall = function (spec, my) {
         return my.radius;
     };
 
+    that.setGlued = function (val) {
+        if(val == true || val == false)
+            glued = val;
+    };
+
+    that.getGlued = function () {
+        return glued;
+    };
+
     that.getPhysBody = function () {
         return my.physBody;
     };
@@ -53,6 +66,7 @@ var createBall = function (spec, my) {
         superInit(args);
         if (args) {
             my.radius = args.radius || my.radius;
+            glued = args.glued || glued;
 
             var entityDef = {
                 x: args.pos.x,
@@ -73,66 +87,66 @@ var createBall = function (spec, my) {
         }
     };
 
-    that.onTouch = function (otherBody, point, impulse) {
-        var otherData = otherBody.GetUserData();
-        var otherEntity = null;
-        if (otherData) {
-            if (otherData.type == 'border'); {
-                otherEntity = otherData.ent;
-                if (otherEntity.side == 'right' || otherEntity.side == 'left') {
-                    dir.x *= -1;
-                }
-                else if (otherEntity.side == 'top' || otherEntity.side == 'down') {
-                    dir.y *= -1;
-                }
-            }
+    that.onTouch = function (otherEntity) {
+        
+    };
+
+    that.move = function (dir) {
+        if (glued) {
+            my.last.x = my.pos.x;
+            my.last.y = my.pos.y;
+
+            my.pos.x += dir.x;
+            my.pos.y += dir.y;
         }
     };
 
     that.update = function () {
-       // console.log("update ball");
-        var physPos = null;
+        // console.log("update ball");
         superUpdate();
-        my.last.x = my.pos.x;
-        my.last.y = my.pos.y;
+        if (!glued) {
+            var physPos = null;
+            my.last.x = my.pos.x;
+            my.last.y = my.pos.y;
 
-        var hlfSize = {
-            x: my.size.x * 0.5,
-            y: my.size.y * 0.5
-        };
+            var hlfSize = {
+                x: my.size.x * 0.5,
+                y: my.size.y * 0.5
+            };
 
-        console.log("before my.pos += dir * speed");
-        console.log("pos.x=" + my.pos.x + ", pos.y=" + my.pos.y + ",dir.x=" + dir.x + ", dir.y=" + dir.y+", speed="+speed);
+            console.log("before my.pos += dir * speed");
+            console.log("pos.x=" + my.pos.x + ", pos.y=" + my.pos.y + ",dir.x=" + dir.x + ", dir.y=" + dir.y + ", speed=" + speed);
 
-        my.pos.x += dir.x * speed;
-        my.pos.y += dir.y * speed;
-        
-        console.log("after my.pos += dir * speed");
-        console.log("pos.x=" + my.pos.x + ", pos.y=" + my.pos.y + ",dir.x=" + dir.x + ", dir.y=" + dir.y + ", speed=" + speed);
+            my.pos.x += dir.x * speed;
+            my.pos.y += dir.y * speed;
 
-        var levelSize = gGameEngine.commonLevelConfig.levelSize;
-        
-        console.log("before resolve collision");
-        console.log("pos.x=" + my.pos.x + ", pos.y="+my.pos.y + ",dir.x="+ dir.x+", dir.y="+dir.y);
-        resolveCollision();
+            console.log("after my.pos += dir * speed");
+            console.log("pos.x=" + my.pos.x + ", pos.y=" + my.pos.y + ",dir.x=" + dir.x + ", dir.y=" + dir.y + ", speed=" + speed);
 
-        console.log("after resolve collision");
-        console.log("pos.x=" + my.pos.x + ", pos.y=" + my.pos.y + ",dir.x=" + dir.x + ", dir.y=" + dir.y);
+            var levelSize = gGameEngine.commonLevelConfig.levelSize;
 
-        if (my.pos.x + hlfSize.x >= levelSize.right) {
-            my.pos.x = levelSize.right - hlfSize.x;
-            dir.x *= -1;
-        } else if (my.pos.x - hlfSize.x <= levelSize.left) {
-            my.pos.x = levelSize.left + hlfSize.x;
-            dir.x *= -1;
-        }
+            console.log("before resolve collision");
+            console.log("pos.x=" + my.pos.x + ", pos.y=" + my.pos.y + ",dir.x=" + dir.x + ", dir.y=" + dir.y);
+            resolveCollision();
 
-        if (my.pos.y + hlfSize.y >= levelSize.bottom) {
-            my.pos.y = levelSize.bottom - hlfSize.y;
-            dir.y *= -1;
-        } else if (my.pos.y - hlfSize.y <= levelSize.top) {
-            my.pos.y = levelSize.top + hlfSize.y;
-            dir.y *= -1;
+            console.log("after resolve collision");
+            console.log("pos.x=" + my.pos.x + ", pos.y=" + my.pos.y + ",dir.x=" + dir.x + ", dir.y=" + dir.y);
+
+            if (my.pos.x + hlfSize.x >= levelSize.right) {
+                my.pos.x = levelSize.right - hlfSize.x;
+                dir.x *= -1;
+            } else if (my.pos.x - hlfSize.x <= levelSize.left) {
+                my.pos.x = levelSize.left + hlfSize.x;
+                dir.x *= -1;
+            }
+
+            if (my.pos.y + hlfSize.y >= levelSize.bottom) {
+                my.pos.y = levelSize.bottom - hlfSize.y;
+                dir.y *= -1;
+            } else if (my.pos.y - hlfSize.y <= levelSize.top) {
+                my.pos.y = levelSize.top + hlfSize.y;
+                dir.y *= -1;
+            }
         }
     };
 
@@ -152,7 +166,7 @@ var createBall = function (spec, my) {
 
             //if the entity isn't this ball
             if (ent != that) {
-                if (ent.getType() == "Block" || ent.getType() == "DestroyableBlock") {
+                if (ent.getTypeForCollision() == "Block" || ent.getTypeForCollision() == "DestroyableBlock" || ent.getTypeForCollision() == "Player") {
 
                     //debug
 //                    gSpriteManager.drawRect({ x: ent.getPos().x, y: ent.getPos().y, width: ent.getSize().x, height: ent.getSize().y });
@@ -211,10 +225,10 @@ var createBall = function (spec, my) {
                 ent = previousCollisionEntities[i];
 
                 rect = {
-                    x: ent.getPos().x - ent.getSize().x / 2,
-                    y: ent.getPos().y - ent.getSize().y / 2,
-                    width: ent.getSize().x,
-                    height: ent.getSize().y
+                    x: ent.getPos().x - ent.getSize().x * 0.5 * ent.getScale().x,
+                    y: ent.getPos().y - ent.getSize().y * 0.5 * ent.getScale().y,
+                    width: ent.getSize().x * ent.getScale().x,
+                    height: ent.getSize().y * ent.getScale().y
                 };
 
 //                console.log("circle.x=" + circle.x + ", circle.y=" + circle.y + ", circle.radius=" + circle.radius);
@@ -263,10 +277,10 @@ var createBall = function (spec, my) {
             radius: ball.getRadius()
         };
         var rect = {
-            x: block.getPos().x - block.getSize().x / 2,
-            y: block.getPos().y - block.getSize().y / 2,
-            width: block.getSize().x,
-            height: block.getSize().y,
+            x: block.getPos().x - block.getSize().x * 0.5 * block.getScale().x,
+            y: block.getPos().y - block.getSize().y * 0.5 * block.getScale().y,
+            width: block.getSize().x * block.getScale().x,
+            height: block.getSize().y * block.getScale().y,
         };
 
         return circleRectangleCollision(circle, rect);

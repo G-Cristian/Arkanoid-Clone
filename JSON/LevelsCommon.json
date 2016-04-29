@@ -7,7 +7,7 @@
     "left": 4,
     "top": 4,
     "right": 104,
-    "bottom":204
+    "bottom": 204
   },
   "borders": [
     {
@@ -93,8 +93,19 @@
     "type": "ball",
     "pos": {
       "x": 60,
-      "y": 40
+      "y": 184
     },
     "radius": 3
+  },
+  "player": {
+    "type": "player",
+    "pos": {
+      "x": 54,
+      "y": 190
+    },
+    "size": {
+      "x": 24,
+      "y": 4
+    }
   }
 }

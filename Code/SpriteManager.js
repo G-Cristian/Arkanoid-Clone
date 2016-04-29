@@ -102,7 +102,7 @@ var gSpriteManager =
                 }
             }
         },
-        drawSprite: function (sprite, posX, posY, angle) {
+        drawSprite: function (sprite, posX, posY, angle, scale) {
             var img = null;
             var spt = null;
             if (typeof (sprite) == 'object') {
@@ -127,6 +127,11 @@ var gSpriteManager =
                 y: spt.cy
             };
 
+            scale = scale || {
+                x: 1.0,
+                y: 1.0
+            };
+
             var worldSize = gGameEngine.commonLevelConfig["worldSize"];
             
             // 'worldSize' world units (wu) = 'canvasSize' canvas units (cu)
@@ -143,14 +148,14 @@ var gSpriteManager =
                 gGameEngine.ctx.translate(posX * worldCanvasRatio.x, posY * worldCanvasRatio.y);
                 gGameEngine.ctx.rotate(angle * Math.PI / 180);
                 gGameEngine.ctx.drawImage(  img, spt.x, spt.y, spt.w, spt.h,
-                                            hlf.x * worldCanvasRatio.x, hlf.y * worldCanvasRatio.y,
-                                            spt.w * worldCanvasRatio.x, spt.h * worldCanvasRatio.y);
+                                            hlf.x * worldCanvasRatio.x * scale.x, hlf.y * worldCanvasRatio.y * scale.y,
+                                            spt.w * worldCanvasRatio.x * scale.x, spt.h * worldCanvasRatio.y * scale.y);
                 gGameEngine.ctx.restore();
             }
             else {
                 gGameEngine.ctx.drawImage(  img, spt.x, spt.y, spt.w, spt.h,
-                                            (posX + hlf.x) * worldCanvasRatio.x, (posY + hlf.y) * worldCanvasRatio.y,
-                                            spt.w * worldCanvasRatio.x, spt.h * worldCanvasRatio.y);
+                                            (posX + hlf.x) * worldCanvasRatio.x * scale.x, (posY + hlf.y) * worldCanvasRatio.y * scale.y,
+                                            spt.w * worldCanvasRatio.x * scale.x, spt.h * worldCanvasRatio.y * scale.y);
             }
         },
         drawRect: function (rect) {

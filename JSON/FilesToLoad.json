@@ -1,5 +1,6 @@
 {
     "sprites": ["http://localhost/arkanoid-clone/JSON/Textures.json"],
-    "levelsCommon": ["http://localhost/arkanoid-clone/JSON/LevelsCommon.json"],
-    "levels": ["http://localhost/arkanoid-clone/JSON/Test_01.json"]
+  "levelsCommon": [ "http://localhost/arkanoid-clone/JSON/LevelsCommon.json" ],
+  "inputs": ["http://localhost/arkanoid-clone/JSON/InputSettings.json" ],
+  "levels": [ "http://localhost/arkanoid-clone/JSON/Test_01.json" ]
 }

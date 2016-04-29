@@ -1,4 +1,5 @@
 ///<reference path = PhysicsEngine.js />
+///<reference path = InputEngine.js />
 ///<reference path="LevelManager.js"/>
 
 //gGameEngine
@@ -11,7 +12,9 @@ var gGameEngine =
         currLevel:null,
         factory: {},
         entities: [],
-        _deferredKill:[],
+        _deferredKill: [],
+        player:null,
+
         spawnEntity: function (type, spec) {
           //  console.log("spawn type " + type + " spec " + spec);
             var entity = this.factory[type](spec);
@@ -36,6 +39,7 @@ var gGameEngine =
             gFilesManager.init();
             gFilesManager.readFile("http://localhost/arkanoid-clone/JSON/CanvasConfig.json", function (responceText) {
                 var parsed = JSON.parse(responceText);
+                canvas.id = "canvas";
                 canvas.width = parsed.width;
                 canvas.height = parsed.height;
                 canvas.style.border = parsed.border || "";
@@ -92,6 +96,7 @@ var gGameEngine =
                     }
                 });
 */
+                gInputEngine.init("body", gFilesManager.inputJSON);
                 gGameEngine.commonLevelConfig = JSON.parse(gFilesManager.levelsConfigJSON);
                 var level = gFilesManager.levelsJSONs[0].json;
                 console.log("level " + level);
@@ -101,23 +106,53 @@ var gGameEngine =
             
         },
         start: function () {
-            gGameEngine.setBallInitialLocation();
+            var ball = gGameEngine.initializeBall();
+            gGameEngine.player = gGameEngine.initializePlayer(ball);
+            
 
             setInterval(function () {
                 gGameEngine.gameLoop();
             }, 33);
             
         },
-        gameLoop:function(){
+        gameLoop: function () {
+            gGameEngine.processInput();
             gGameEngine.update();
             gGameEngine.draw();
         },
-        setBallInitialLocation:function(){
+        initializeBall:function(){
             var common = JSON.parse(gFilesManager.levelsConfigJSON);
             var entitySpec = {};
             entitySpec.pos = common.ball.pos;
             entitySpec.radius = common.ball.radius;
-            gGameEngine.spawnEntity(common.ball.type, entitySpec);
+            var ball = gGameEngine.spawnEntity(common.ball.type, entitySpec);
+
+            ball.setGlued(true);
+
+            return ball;
+        },
+        initializePlayer:function(ball){
+            var common = JSON.parse(gFilesManager.levelsConfigJSON);
+            var entitySpec = {};
+            entitySpec.pos = common.player.pos;
+            entitySpec.size = common.player.size;
+            var player = gGameEngine.spawnEntity(common.player.type, entitySpec);
+
+            player.addGluedBall(ball);
+            return player;
+        },
+        processInput: function () {
+            if (gInputEngine.actions["MoveLeft"]) {
+                gGameEngine.player.move(-3);
+            }
+
+            if (gInputEngine.actions["MoveRight"]) {
+                gGameEngine.player.move(3);
+            }
+
+            if (gInputEngine.actions["Shoot"]) {
+                gGameEngine.player.shoot();
+            }
         },
         update: function () {
             var i = 0;
